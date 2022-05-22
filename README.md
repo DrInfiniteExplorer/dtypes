@@ -2,7 +2,7 @@
 
 Yo yo what's this?
 
-Well it's ✨`dtypes`✨ which is extra stuff to make `ctypes` usable.
+Well it's ✨`dtypes`✨ which is extra stuff to make `ctypes` usable. Or as the my future kids like to say, _"`dtypes` is on `ctypes` like butter is on toast"_.
 
 Who wants to do
 
@@ -19,6 +19,7 @@ when you can do
 
 ```py
 from dtypes.structify import structify
+
 @structify
 class Yolo(ctypes.structure):
     a : ctypes.c_int
@@ -57,8 +58,9 @@ class Chonko(ctypes.structure):
     yeet : Pointer(Yeet)
 
 @structify
-class Yeet(ctypes.structure):
+class Yeet(ctypes.structure, Yeet):
     chonker : Chonko
     this    : ThisPtr
 ]
 ```
+

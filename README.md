@@ -2,7 +2,7 @@
 
 Yo yo what's this?
 
-Well it's ✨`dtypes`✨ which is extra stuff to make `ctypes` usable. Or as the my future kids like to say, _"`dtypes` is on `ctypes` like butter is on toast"_.
+Well it's ✨`dtypes`✨ which is extra stuff to make `ctypes` usable. Or as my future kids like to say, _"`dtypes` is on `ctypes` like butter is on toast"_.
 
 Who wants to do
 

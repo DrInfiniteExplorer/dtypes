@@ -47,14 +47,18 @@ True
 """
 
 import ctypes
+from typing import Any, List
 
 from dtypes.voidy import VoidyPtr
 
+
 class Pointer:
-    def __init__(self, typ = None):
+    def __init__(self, typ: type):
         self.typ = typ
 
-ThisPtr = Pointer(None)
+class __SelfPtrSentineType:
+    ...
+ThisPtr = Pointer(__SelfPtrSentineType)
 
 class FWD:
     """
@@ -73,39 +77,42 @@ def fwd():
     return _FWD
 
 
-need_fixup = []
+need_fixup: List[Pointer]= []
 
-def late_bind(cls, name, rest):
+def late_bind(cls: type, member_name: str, member_ptr_type: Pointer):
     """
-    If the name/type -pair is a `Pointer`, turn it into a voidy
-     pointer prefixed with `_` and supply casting properties
+    If the name/type -pair is a `Pointer`, turn it into a
+     void* prefixed with `_` and supply casting properties
      with the original name.
-    The casting properties can do 'late' type-binding in the
-     properties.
+
     This allows us to refer to our own class (using
      the ThisType marker), to use a manually premade Pointer
      instance that is populated later, or to use with `fwd`
      to allow automagic later binding.
+
+    `member_ptr_type` is used as an indirector. When we access
+      the type through the generated properties, the void*
+      is cast to the late-ly assigned actual type.
     """
-    oname = name
-    orest = rest
-    name = '_' + name
-    if rest is ThisPtr:
-        orest = Pointer(cls)
+    original_member_name = member_name
+    member_name = '_' + member_name
+    if member_ptr_type is ThisPtr:
+        member_ptr_type = Pointer(cls)
     else:
-        Typ = rest.typ
+        Typ = member_ptr_type.typ
         if issubclass(Typ, FWD):
-            need_fixup.append(orest)
-    rest = VoidyPtr
-    def getty_cast(self):
-        voidy_ptr = getattr(self, name)
-        return ctypes.cast(voidy_ptr, ctypes.POINTER(orest.typ))
-    def setty_cast(self, val):
-        assert isinstance(val, ctypes.POINTER(orest.typ))
-        setattr(self, name, ctypes.cast(val, VoidyPtr))
+            need_fixup.append(member_ptr_type)
+
+    def getty_cast(self: ctypes.Structure):
+        voidy_ptr = getattr(self, member_name)
+        return ctypes.cast(voidy_ptr, ctypes.POINTER(member_ptr_type.typ))
+    def setty_cast(self: ctypes.Structure, val: Any): # Can't lock down type of val, since we don't know it ¯\_(ツ)_/¯
+        assert isinstance(val, ctypes.POINTER(member_ptr_type.typ))
+        setattr(self, member_name, ctypes.cast(val, VoidyPtr))
     proppy = property(fget = getty_cast, fset = setty_cast)
-    setattr(cls, oname, proppy)
-    #print(getattr(cls, oname))
-    return name, rest
+    setattr(cls, original_member_name, proppy)
+
+    # The final field type should be the name, and a generic void*
+    return member_name, VoidyPtr
 
 

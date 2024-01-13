@@ -1,9 +1,12 @@
 
 import ctypes
-from typing import List, Tuple, Union
+from typing import List, Tuple, Type, TypeVar, Union
 from .fwd import FWD, Pointer, late_bind, need_fixup
 
-def structify[T: type[ctypes.Structure]](cls: T) -> T:
+
+StructType = TypeVar("StructType", bound=Type[ctypes.Structure])
+
+def structify(cls: StructType) -> StructType:
     """
     A decorator that can turn simpler class definitions into the more line-noisy
      format that ctypes parses.

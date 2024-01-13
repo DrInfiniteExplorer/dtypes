@@ -34,10 +34,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install build
+    - name: Get history and tags for SCM versioning to work
+      run: |
+        git fetch --prune --unshallow
+        git fetch --depth=1 origin +refs/tags/*:refs/tags/*
     - name: Build package
       run: python -m build
-    - name: git status?
-      run: git status
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf
       with:

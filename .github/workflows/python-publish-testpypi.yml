@@ -11,6 +11,7 @@ name: Upload Python Package to TestPyPi
 on:
   release:
     types: prereleased
+  workflow_dispatch: 
 
 permissions:
   contents: read

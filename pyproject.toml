@@ -1,3 +1,28 @@
 [build-system]
-requires = ["setuptools>=42"]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "dtypes"
+authors = [
+    { name = "Pierre LeMoine", email = "pypi@luben.se"},
+]
+description = "decorators and utils for ctypes"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+requires-python = ">=3.6"
+keywords = ["ctypes", "dtypes", "annotation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/DrInfiniteExplorer/dtypes"
+Repository = "https://github.com/DrInfiniteExplorer/dtypes"
+
+[tool.setuptools_scm]
